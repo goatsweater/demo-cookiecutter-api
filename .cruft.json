@@ -1,0 +1,22 @@
+{
+  "template": "http://github.com/statcan/datascience-cookiecutter",
+  "commit": "771e8b223b9f57fdd190c25be5f8896f10487220",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "project_name_en": "Demo CookieCutter API",
+      "project_name_fr": "Demo CookieCutter API",
+      "organisation": "StatCan",
+      "repo_name": "demo-cookiecutter-api",
+      "project_version": "0.1.0",
+      "using_R": "No",
+      "VCS": "Github",
+      "__pypkg": "demo_cookiecutter_api",
+      "_extensions": [
+        "cookiecutter.extensions.SlugifyExtension"
+      ],
+      "_template": "http://github.com/statcan/datascience-cookiecutter"
+    }
+  },
+  "directory": null
+}
