@@ -2,10 +2,10 @@
 
 # Security
 
-**Do not post any security issues on the public repository!** Security vulnerabilities must be reported by email to `statcan.opensource-logiciellibre.statcan@canada.ca`
+This is just a demo. Please report any security issues on the public repository!
 
 ______________________
 
 ## Sécurité
 
-**Ne publiez aucun problème de sécurité sur le dépôt publique!** Les vulnérabilités de sécurité doivent être signalées par courriel à `statcan.opensource-logiciellibre.statcan@canada.ca`
+Ceci n'est qu'une démo. Veuillez signaler tout problème de sécurité sur le dépôt public!
