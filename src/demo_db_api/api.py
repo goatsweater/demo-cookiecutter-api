@@ -3,6 +3,7 @@ from importlib.metadata import version
 
 from fastapi import FastAPI, RequestValidationError
 
+from . import routers
 from .schemas import response
 
 app = FastAPI(
@@ -14,6 +15,9 @@ app = FastAPI(
         "url": "https://github.com/goatsweater/demo-cookiecutter-api/blob/main/LICENSE"
     }
 )
+
+# Routed endpoints
+app.include_router(routers.v1)
 
 
 #####
