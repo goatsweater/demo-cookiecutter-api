@@ -1,6 +1,9 @@
+import uuid
 from importlib.metadata import version
 
-from fastapi import FastAPI
+from fastapi import FastAPI, RequestValidationError
+
+from .schemas import response
 
 app = FastAPI(
     title="Demo cookiecutter API",
@@ -11,6 +14,19 @@ app = FastAPI(
         "url": "https://github.com/goatsweater/demo-cookiecutter-api/blob/main/LICENSE"
     }
 )
+
+
+#####
+# Response message for validation errors
+#####
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    err = response.Error(
+        code=exc.status_code,
+        detail=str(exc.detail),
+        title="Invalid request"
+    )
+    return response.Message(meta=response.Meta(id=uuid.uuid()), errors=[err])
 
 
 @app.get("/")
