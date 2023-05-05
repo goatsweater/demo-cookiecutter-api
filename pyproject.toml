@@ -21,7 +21,8 @@ classifiers = [
 dynamic = ["version"]
 # Update and version pin all runtime dependencies
 dependencies = [
-    "fastapi>=0.95.1"
+    "fastapi>=0.95.1",
+    "sqlalchemy>=2.0.12"
 ]
 
 # Set any development related dependencies here
