@@ -29,6 +29,7 @@ dependencies = [
 [project.optional-dependencies]
 tests = [
     "uvicorn[standard]>=0.22.0",
+    "httpx>=0.24.0",
     "pytest",
     "requests",
     "sphinx",
