@@ -1,7 +1,8 @@
 import uuid
 from importlib.metadata import version
 
-from fastapi import FastAPI, RequestValidationError
+from fastapi import FastAPI
+from fastapi.exceptions import RequestValidationError
 
 from . import routers
 from .schemas import response
