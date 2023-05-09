@@ -5,6 +5,7 @@ These are primarily based on the SDMX-JSON specification, although not attemptin
 fully compliant.
 """
 from datetime import datetime
+from typing import Union
 
 from pydantic import BaseModel
 
@@ -12,7 +13,7 @@ from pydantic import BaseModel
 class Sender(BaseModel):
     """Sender information for responses."""
     id: str = "DEMO"
-    name: str | None = None
+    name: Union[str, None] = None
 
 
 class Meta(BaseModel):
@@ -25,26 +26,26 @@ class Meta(BaseModel):
 class DataStructure(BaseModel):
     """Provides the structural metadata necessary to interpret the data contained in the message."""
     dimensions: list[str]
-    measures: list[str] | None = None
-    attributes: list[str] | None = None
-    annotations: list[str] | None = None
+    measures: Union[list[str], None] = None
+    attributes: Union[list[str], None] = None
+    annotations: Union[list[str], None] = None
 
 
 class Data(BaseModel):
     """Data provided as part of a GET response."""
-    structures: list[DataStructure] | None = None
-    dataSets: list[dict[str, str | float | int | None]] | None = None
+    structures: Union[list[DataStructure], None] = None
+    dataSets: Union[list[dict[str, Union[str, float, int, None]]], None] = None
 
 
 class Error(BaseModel):
     """Any errors encountered that need to be sent back to clients."""
     code: int
-    title: str | None = None
-    detail: str | None = None
+    title: Union[str, None] = None
+    detail: Union[str, None] = None
 
 
 class Message(BaseModel):
     """Common response object that holds metadata, data, and errors."""
     meta: Meta
-    data: Data | None = None
-    errors: list[Error] | None = None
+    data: Union[Data, None] = None
+    errors: Union[list[Error], None] = None
