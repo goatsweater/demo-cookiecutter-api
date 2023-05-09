@@ -47,18 +47,49 @@ def db_data(db_session):
     ])
     db_session.execute(stmt)
     db_session.commit()
+
+    # Stuff the db with sample control values
+    stmt = Base.metadata.tables["wes_monthly_Control"].insert().values([
+        {"id": "Addup_Number", "value": "Q"},
+        {"id": "Copy_Destination", "value": "NEAD_DCEN_WIP"},
+        {"id": "Data_Selection", "value": "?"},
+        {"id": "Datestamp", "value": "2023/01/25 15:48:50"},
+        {"id": "DB_Created", "value": "2017/87/03 04:32:31"},
+        {"id": "DB_Description", "value": None},
+        {"id": "DB_Documentation", "value": None},
+        {"id": "DB_Path", "value": "solder.db"},
+        {"id": "DB_Updated", "value": "2022/12/22 15:35:12"},
+        {"id": "Keep_Zeros", "value": "FALSE"},
+        {"id": "Notify", "value": "user1@example.com"},
+        {"id": "Post_Process", "value": "JOBS.WIN.NEAD.BRIDGE.COPV_TO_FINAL_DB"},
+        {"id": "Program_ID", "value": "dbo"},
+        {"id": "Reference_Period", "value": "2022ml2"},
+        {"id": "StatusFlag_NA", "value": "C"},
+        {"id": "StatusFlag_NC", "value": "N"},
+        {"id": "Statusflag_ND", "value": "O"},
+        {"id": "Table_Frequency", "value": "MONTHLY"},
+        {"id": "Table_Name", "value": "solder"},
+        {"id": "Update_Mode", "value": "REPLACE"},
+        {"id": "User", "value": "user1"},
+    ])
+    db_session.execute(stmt)
+    db_session.commit()
     
     return db_session
 
 
-@pytest.mark.parametrize("table_type", [models.Meta, models.Data])
+@pytest.mark.parametrize("table_type", [models.Meta, models.Data, models.Control])
 def test_get_table(db_data, table_type):
     tbl = models.get_table_instance("wes", "monthly", table_type)
     stmt = sa.select(tbl)
 
     row = db_data.execute(stmt).first()
 
-    assert row.series == "WES51"
+    # Control tables only have id and value fields
+    if table_type == models.Control:
+        assert row.id == "Addup_Number"
+    else:
+        assert row.series == "WES51"
 
 
 def test_get_invalid_table_type(db_data):
