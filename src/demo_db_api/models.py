@@ -1,7 +1,12 @@
+import logging
+from typing import Union
+
 import sqlalchemy as sa
 from sqlalchemy import orm
 
 from .database import Base
+
+logger = logging.getLogger(__name__)
 
 
 class Meta(Base):
@@ -30,29 +35,33 @@ class Control(Base):
     value: orm.Mapped[str] = orm.mapped_column(nullable=True)
 
 
-def get_meta_instance(name: str) -> Meta:
-    """Produce a named instance of the desired table template."""
-    tblname = f"{name}_meta"
-    class_name = f"Meta"
-    Model = type(class_name, (Meta,), {
-        '__tablename__': tblname
-    })
-    return Model
+def get_table_instance(name: str, freq: str, base: Union[Meta, Data, Control]) -> Union[Meta, Data, Control]:
+    """
+    Retrieve an instance of a Meta, Data, or Control table to be used for interacting with the database.
 
-def get_data_instance(name: str) -> Data:
-    """Produce a named instance of the desired table template."""
-    tblname = f"{name}_data"
-    class_name = f"Data"
-    Model = type(class_name, (Data,), {
-        '__tablename__': tblname
-    })
-    return Model
+    Tables in the database get loaded from an external system and are named according to their name, frequency, and type
+    to with underscores (``_``) separating each term. i.e. wes_monthly_data.
+    """
+    table_suffix = ""
+    if base == Meta:
+        table_suffix = "Meta"
+    elif base == Data:
+        table_suffix = "Data"
+    elif base == Control:
+        table_suffix = "Control"
+    else:
+        raise ValueError("Invalid base type.")
 
-def get_control_instance(name: str) -> Control:
-    """Produce a named instance of the desired table template."""
-    tblname = f"{name}_control"
-    class_name = f"Control"
-    Model = type(class_name, (Control,), {
-        '__tablename__': tblname
+    table_name = f"{name}_{freq}_{table_suffix}"
+    logger.debug("Getting reference to table %s", table_name)
+
+    # Look up the base metadata to see if this table is already registered
+    if table_name in Base.metadata.tables:
+        logger.debug("Found existing table reference in Base.")
+        return Base.metadata.tables[table_name]
+    
+    # Instantiate a new table of the desired type
+    table_instance = type(table_name, (base,), {
+        "__tablename__": table_name
     })
-    return Model
+    return table_instance
