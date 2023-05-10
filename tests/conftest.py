@@ -2,14 +2,22 @@ import pytest
 
 import sqlalchemy as sa
 from sqlalchemy import orm
+from fastapi.testclient import TestClient
 
 from demo_db_api.database import Base
 from demo_db_api import models
+from demo_db_api.api import app
+from demo_db_api.routers import get_db
 
 
-# Generate a session for use within this module
 @pytest.fixture(scope="module")
 def db_session(tmp_path_factory):
+    """
+    Generate a database session in a temporary sqlite file.
+
+    This is using the pytest built-in fixture to get a path to a safe temporary data
+    space.
+    """
     temp_db = tmp_path_factory.mktemp("data") / "app.db"
     engine = sa.create_engine(f"sqlite:///{temp_db}", connect_args={"check_same_thread": False}, echo=True)
     Session = orm.sessionmaker(bind=engine)
@@ -19,9 +27,9 @@ def db_session(tmp_path_factory):
     session.close()
 
 
-# Generate valid data for use in testing
 @pytest.fixture(scope="module")
 def db_data(db_session):
+    """Fill the database with some known test data."""
     # Create some tables
     wes_monthly_meta = models.get_table_instance("wes", "monthly", models.Meta)
     wes_monthly_data = models.get_table_instance("wes", "monthly", models.Data)
@@ -76,3 +84,15 @@ def db_data(db_session):
     db_session.commit()
     
     return db_session
+
+
+@pytest.fixture()
+def client(db_data):
+    """Generate a FastAPI test client that is connected to the temporary database."""
+    def override_get_db():
+        yield db_data
+    
+    app.dependency_overrides[get_db] = override_get_db
+
+    client = TestClient(app)
+    return client
