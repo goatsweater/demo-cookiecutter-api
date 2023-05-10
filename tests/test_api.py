@@ -3,22 +3,27 @@ from typing import List
 
 from demo_db_api.api import app
 from demo_db_api.routers import get_db
+from demo_db_api.schemas import response
 
 
 def test_get_root(client):
-    response = client.get("/")
-    assert response.status_code == 200
-    assert response.json() == {"msg": "Hello, data science."}
+    resp = client.get("/")
+    assert resp.status_code == 200
+    assert resp.json() == {"msg": "Hello, data science."}
 
 
 def test_get_available_dbs(caplog, client):
     caplog.set_level(logging.DEBUG)
-    response = client.get("/v1/availability")
-    assert response.status_code == 200
+    resp = client.get("/v1/availability")
+    assert resp.status_code == 200
 
-    dbs = response.json()
-    assert isinstance(dbs, List)
+    message = resp.json()
+    assert "meta" in message.keys()
     
-    # There should only be a single table in the test database
-    assert dbs[0].get("db") == "wes"
-    assert dbs[0].get("freq") == "monthly"
+    # Make sure a data message is returned
+    assert "data" in message.keys()
+    assert "dataSets" in message.get("data").keys()
+    assert isinstance(message.get("data").get("dataSets"), List)
+
+    # Expecting only a single dataset to be present
+    assert len(message.get("data").get("dataSets")) == 1
