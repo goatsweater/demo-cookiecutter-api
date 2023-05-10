@@ -9,7 +9,9 @@ from demo_db_api.schemas import response
 def test_get_root(client):
     resp = client.get("/")
     assert resp.status_code == 200
-    assert resp.json() == {"msg": "Hello, data science."}
+    
+    message = resp.json()
+    assert "version" in message.keys()
 
 
 def test_get_available_dbs(caplog, client):

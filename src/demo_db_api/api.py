@@ -36,4 +36,4 @@ async def validation_exception_handler(request, exc):
 
 @app.get("/")
 async def get_root():
-    return {"msg": "Hello, data science."}
+    return {"version": version("demo_db_api")}
