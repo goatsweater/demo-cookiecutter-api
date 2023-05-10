@@ -34,18 +34,21 @@ def get_table_names(
     all_tables = insp.get_table_names()
     
     if items is not None:
+        logger.debug("Looking for db tables: %s", items)
         exact_matches = []
         for item in items:
             reduced = filter(lambda x: x == item, all_tables)
             exact_matches.extend(list(reduced))
         return exact_matches
     elif like:
+        logger.debug("Looking for tables containing: %s", like)
         def f(x):
             return like in x
         
         all_tables = list(filter(f, all_tables))
         return all_tables
     elif regex:
+        logger.debug("Looking for tables matching: %s", regex)
         def f(x):
             return matcher.search(x) is not None
         

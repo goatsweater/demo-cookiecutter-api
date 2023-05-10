@@ -1,13 +1,16 @@
 from typing import List
 
+import pytest
+
 from demo_db_api import crud
 
 
-def test_list_tables_like(db_data):
+@pytest.mark.parametrize("type_match", ["Control", "Meta", "Data"])
+def test_list_tables_like(db_data, type_match):
     """Test fetching list of available tables based on string matches."""
     engine = db_data.get_bind()
 
-    table_list = crud.get_table_names(engine, like="Control")
+    table_list = crud.get_table_names(engine, like=type_match)
 
     assert isinstance(table_list, List)
     assert len(table_list) == 1
