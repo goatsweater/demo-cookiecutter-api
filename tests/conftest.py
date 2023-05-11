@@ -43,7 +43,12 @@ def db_data(db_session):
         {"series": "WES51", "attribute": "Created", "value": "2017/07/03 04:36:10"},
         {"series": "WES51", "attribute": "Frequency", "value": "MONTHLY"},
         {"series": "WES51", "attribute": "LastUpdated", "value": "2022/05/06 10:19:16"},
-        {"series": "WES51", "attribute": "Observed", "value": "SUMMED"}
+        {"series": "WES51", "attribute": "Observed", "value": "SUMMED"},
+        {"series": "PES51", "attribute": "Basis", "value": "DAILY"},
+        {"series": "PES51", "attribute": "Created", "value": "2017/87/03 04:36:10"},
+        {"series": "PES51", "attribute": "Frequency", "value": "MONTHLY"},
+        {"series": "PES51", "attribute": "LastUpdated", "value": "2022/05/06 10:19:16"},
+        {"series": "PES51", "attribute": "Observed", "value": "SUMMED"},
     ])
     db_session.execute(stmt)
     db_session.commit()
@@ -51,7 +56,9 @@ def db_data(db_session):
     # Stuff the db with sample data
     stmt = Base.metadata.tables["wes_monthly_Data"].insert().values([
         {"series": "WES51", "refperiod": "2009m01", "value": "28267.73", "status": "A"},
-        {"series": "WES51", "refperiod": "2009m02", "value": "29067.72", "status": "A"}
+        {"series": "WES51", "refperiod": "2009m02", "value": "29067.72", "status": "A"},
+        {"series": "PES51", "refperiod": "2009m01", "value": "28567.73", "status": "A"},
+        {"series": "PES51", "refperiod": "2009m02", "value": "29069.72", "status": "A"},
     ])
     db_session.execute(stmt)
     db_session.commit()
